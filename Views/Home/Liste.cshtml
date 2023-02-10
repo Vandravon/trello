@@ -1,0 +1,36 @@
+@{
+    ViewData["Title"] = "Liste";
+}
+<h1>@ViewData["Title"]</h1>
+
+
+<a class="btn btn-success" asp-controller="Liste" asp-action="Add">Ajouter une liste</a>
+<a class="btn btn-success" asp-controller="Carte" asp-action="Add">Ajouter une carte</a>
+
+<div class="d-flex justify-content-around flex-wrap">
+    @foreach (Liste liste in Model.IdListes)
+    {
+
+        <div class="card border border-dark border-3" style="width: 18rem;">
+        <div class="card-body">
+
+
+        <h5 class="card-title mb-1">@liste.Nom <a class="btn btn-outline-warning" asp-controller="Liste" asp-action="Edit" asp-route-id="@liste.IdListe">Edit</a></h5>
+        @* <a class="btn btn-danger" asp-controller="Liste" asp-action="Delete" asp-route-id="@liste.IdListe">Supprimer la liste</a> *@
+        <p class="card-subtitle mb-4 text-muted">Id: @liste.IdListe</p>
+      
+            @foreach (Carte carte in liste.GetCartes())
+            {
+                <div class="border border-info p-2 my-2">
+                    <p class="card-text">@carte.Titre</p>
+                    <h6 class="card-subtitle mb-2 text-muted">@carte.Description</h6>
+                    <p class="card-text">@carte.DateCreation</p>
+                    <a class="btn btn-outline-warning" asp-controller="Carte" asp-action="Edit" asp-route-id="@carte.IdCarte">Edit</a>
+                    @* <a class="btn btn-danger" asp-controller="Carte" asp-action="Delete" asp-route-id="@carte.IdCarte">Supprimer la Carte</a> *@
+                </div>
+            }
+        </div>
+        </div>
+    }
+
+</div>

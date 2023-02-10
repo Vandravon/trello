@@ -1,0 +1,76 @@
+using Microsoft.EntityFrameworkCore;
+namespace Trello.Models
+{
+    public class Repository<T> where T : class
+    {
+        private ProjetContext _database;
+        internal DbSet<T> _table;
+
+        public Repository(ProjetContext database)
+        {
+            this._database = database;
+            System.Console.WriteLine("Repo lancé!");
+            _table = _database.Set<T>();
+
+        }
+        public void add(T item)
+        {
+            using (var transaction = _database.Database.BeginTransaction())
+            {
+                try
+                {
+                    _database.Add<T>(item);
+                    update();
+                    transaction.Commit();
+                    Console.WriteLine("Transaction Add réussie");                    
+
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    Console.WriteLine("Transaction Add échouée");                    
+                }
+            }
+        }
+        public T read(int id)
+        {
+            try 
+            {
+                Console.WriteLine("Read réussi");
+                return _database.Find<T>(id);
+            }
+            catch (Exception e) when (id < 1)
+            {
+                Console.WriteLine("Id null ou négatif");
+                return null;
+            }
+            catch (Exception e) when (_database.Find<T>(id) == null)
+            {
+                Console.WriteLine("L'id n'est pas présent dans la table");
+                return null;
+            }
+        }
+        public void delete(int id)
+        {
+            using (var transaction = _database.Database.BeginTransaction())
+            {
+                try
+                {
+                    _database.Remove<T>(read(id));
+                    update();
+                    transaction.Commit();
+                    Console.WriteLine("Transaction Delete réussie");
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    Console.WriteLine("Transaction Delete échouée");
+                }
+            }
+        } 
+        public void update()
+        {
+            _database.SaveChanges();
+        }
+    }
+}
