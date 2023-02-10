@@ -52,12 +52,12 @@ public class CarteController : Controller
         return RedirectToAction("Liste", "Home");
     }
 
-    // public IActionResult Delete(int id)
-    // {
-    //     Carte cardToRemove = context.Cartes.Single(c => c.IdCarte == id);
-    //     context.Cartes.Remove(cardToRemove);
-    //     context.SaveChanges();
-    //     return RedirectToAction("Liste", "Home");
-    // }
+    public IActionResult Delete(int id)
+    {
+        Carte cardToRemove = context.Cartes.Single(c => c.IdCarte == id);
+        context.Cartes.Remove(cardToRemove);
+        context.SaveChanges();
+        return RedirectToAction("Liste", "Home");
+    }
 
 }

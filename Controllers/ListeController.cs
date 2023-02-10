@@ -47,12 +47,16 @@ public class ListeController : Controller
         return RedirectToAction("Liste", "Home");
     }
 
-    // public IActionResult Delete(int id)
-    // {
-    //     Liste listToRemove = context.Listes.Single(l => l.IdListe == id);
-    //     context.Listes.Remove(listToRemove);
-    //     context.SaveChanges();
-    //     return RedirectToAction("Liste", "Home");
-    // }
+    public IActionResult Delete(int id)
+    {
+        Liste listToRemove = context.Listes.Single(l => l.IdListe == id);
+        foreach (Carte carte in listToRemove.Cartes)
+        {
+            context.Cartes.Remove(carte);
+        }
+        context.Listes.Remove(listToRemove);
+        context.SaveChanges();
+        return RedirectToAction("Liste", "Home");
+    }
 
 }
